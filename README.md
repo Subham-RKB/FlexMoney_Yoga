@@ -12,7 +12,7 @@ By Subham Chapagain (subhamchapgain45@gmail.com).
 - User has to remember the pass key.
 - User can login to his/her account by clicking login (top right).
 - User need to give there passkey inorder to see his/her profile.
-- User can change his/her batch, delete account and pay fee from the profile page.
+- User can change his/her batch if it is different month, delete account and pay fee from the profile page.
 
 ## Technology Used
 - Frontend - React JS
