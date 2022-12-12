@@ -6,10 +6,10 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("build"));
-const con = mysql.createConnection('mysql://root:8WUZnZdk0CJfWF3gJE5f@containers-us-west-122.railway.app:5822/railway').then(
-  () => {console.log("DB connected.")},
-        err => {console.log(err)}
-)
+const con = mysql
+  .createConnection(
+    "mysql://root:8WUZnZdk0CJfWF3gJE5f@containers-us-west-122.railway.app:5822/railway"
+  );
 con.connect((err) => {
   if (err) throw err;
   console.log("Connected");
