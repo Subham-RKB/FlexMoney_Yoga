@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
+const path = require("path");
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("build"));
@@ -55,7 +56,7 @@ app.delete("/api/delete", (req, res) => {
   });
 });
 app.get("/*", function (req, res) {
-  res.sendFile("/index.html");
+  res.sendFile(path.join(__dirname,"build","index.html"));
 });
 app.listen((process.env.PORT || 8000 ), () => {
   console.log("Server Running....");
