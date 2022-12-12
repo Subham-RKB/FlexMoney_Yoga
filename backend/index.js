@@ -6,21 +6,17 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("build"));
-const con = mysql.createConnection({
-  host: "localhost",
-  user: "subham",
-  password: "subham",
-  database: "flexmoney",
-  port: 3307,
-});
-
+const con = mysql.createConnection('mysql://root:8WUZnZdk0CJfWF3gJE5f@containers-us-west-122.railway.app:5822/railway').then(
+  () => {console.log("DB connected.")},
+        err => {console.log(err)}
+)
 con.connect((err) => {
   if (err) throw err;
   console.log("Connected");
 });
 app.post("/api/store", (req, res) => {
   console.log("Stored");
-  var sql = `insert into flexmoney.users (name,email,age,joiningdate,batch) values (?,?,?,?,?);`;
+  var sql = `insert into users (name,email,age,joiningdate,batch) values (?,?,?,?,?);`;
   var age = parseInt(req.body.age);
   var join = new Date(req.body.joiningDate);
   con.query(
@@ -35,7 +31,7 @@ app.post("/api/store", (req, res) => {
 });
 app.post("/api/profile", (req, res) => {
   console.log(req.body);
-  var sql = `select * from flexmoney.users where email=?`;
+  var sql = `select * from users where email=?`;
   con.query(sql, [req.body.email], function (err, result) {
     if (err) throw err;
     console.log(typeof result);
@@ -43,7 +39,7 @@ app.post("/api/profile", (req, res) => {
   });
 });
 app.put("/api/changeBatch", (req, res) => {
-  var sql = `update flexmoney.users set batch=? where email=?`;
+  var sql = `update users set batch=? where email=?`;
   con.query(sql, [req.body.batch, req.body.email], function (err, result) {
     if (err) throw err;
     console.log(result);
