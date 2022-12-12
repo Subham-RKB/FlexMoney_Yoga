@@ -18,12 +18,21 @@ con.connect((err) => {
 app.post("/api/store", (req, res) => {
   console.log("Stored");
   var passKey =  req.body.email+Math.floor(1000 + Math.random() * 9000);
-  var sql = `insert into users (name,email,age,joiningdate,batch) values (?,?,?,?,?);`;
+  var sql1 = `insert into users (name,email,age,joiningdate) values (?,?,?,?);`;
   var age = parseInt(req.body.age);
   var join = new Date(req.body.joiningDate);
   con.query(
-    sql,
-    [req.body.username,passKey, age, join, req.body.batch],
+    sql1,
+    [req.body.username,passKey, age, join],
+    function (err, result) {
+      if (err) throw err;
+      console.log("inserted.");
+    }
+  );
+  var sql2 = `insert into batchdetail (email,batch,changeddate) values (?,?,?)`;
+  con.query(
+    sql2,
+    [passKey,req.body.batch,join],
     function (err, result) {
       if (err) throw err;
       console.log("inserted.");
@@ -33,7 +42,7 @@ app.post("/api/store", (req, res) => {
 });
 app.post("/api/profile", (req, res) => {
   console.log(req.body);
-  var sql = `select * from users where email=?`;
+  var sql = `select * from users inner join batchdetail on users.email=batchdetail.email where users.email=?`;
   con.query(sql, [req.body.email], function (err, result) {
     if (err) throw err;
     console.log(typeof result);
@@ -41,8 +50,14 @@ app.post("/api/profile", (req, res) => {
   });
 });
 app.put("/api/changeBatch", (req, res) => {
-  var sql = `update users set batch=? where email=?`;
+  var sql = `update batchdetail set batch=? where email=?`;
   con.query(sql, [req.body.batch, req.body.email], function (err, result) {
+    if (err) throw err;
+    console.log(result);
+    res.send({ batch: req.body.batch });
+  });
+  var sql1 = `update batchdetail set changeddate=? where email=?`;
+  con.query(sql1, [new Date(), req.body.email], function (err, result) {
     if (err) throw err;
     console.log(result);
     res.send({ batch: req.body.batch });

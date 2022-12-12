@@ -8,8 +8,8 @@ const Login = () => {
   const [email, setEmail] = useState({
     email: "",
   });
-  const [batch,setBatch] = useState({
-    batch:"",
+  const [batch, setBatch] = useState({
+    batch: "",
   });
   const [userData, setUserData] = useState({});
   const newRecord = { ...email, id: new Date().getDate().toString() };
@@ -19,35 +19,45 @@ const Login = () => {
     const value = e.target.value;
     setEmail({ ...email, [name]: value });
   };
-  
-  const handleBatch = (e)=>{
+
+  const handleBatch = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     setBatch({ ...batch, [name]: value });
-  }
-  const handleBatchSubmit = async(e) =>{
+  };
+  const handleBatchSubmit = async (e) => {
     e.preventDefault();
-    axios({
-      method: "put",
-      url:'/api/changeBatch',
-      data: {email:newRecord.email,batch:batch.batch}, 
-    }).then(function(response){
-      if(response.data.batch){
-        var {batch,...newUserData} = userData;
-        newUserData.batch = response.data.batch;
-        setUserData(newUserData);
-      }        
-    })
-  }
-  const handleDelete = async(e) =>{
+    const givenDate = new Date(userData.changeddate);
+    const todayDate = new Date();
+    console.log(givenDate);
+    console.log(todayDate);
+    //console.log(.getMonth() - todayDate.getMonth());
+    if (todayDate.getMonth() - givenDate.getMonth() >= 1) {
+      axios({
+        method: "put",
+        url: "/api/changeBatch",
+        data: { email: newRecord.email, batch: batch.batch },
+      }).then(function (response) {
+        if (response.data.batch) {
+          var { batch, ...newUserData } = userData;
+          newUserData.batch = response.data.batch;
+          setUserData(newUserData);
+        }
+      });
+    }
+    else{
+      alert("You are only allowed to change next month");
+    }
+  };
+  const handleDelete = async (e) => {
     axios({
       method: "delete",
       url: "/api/delete",
-      data: newRecord
-    }).then(function(response){
+      data: newRecord,
+    }).then(function (response) {
       navigate("/");
-    })
-  }
+    });
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     axios({
@@ -63,9 +73,9 @@ const Login = () => {
       }
     });
   };
-  const handlePayNow = (e)=>{
+  const handlePayNow = (e) => {
     alert("Phone pay: 9894401705@ybl");
-  }
+  };
   return (
     <>
       {!isSubmit && (
@@ -105,7 +115,7 @@ const Login = () => {
                     value={"6-7 AM"}
                     name="batch"
                     onChange={handleBatch}
-                    checked={batch.batch==="6-7 AM"}
+                    checked={batch.batch === "6-7 AM"}
                   />{" "}
                   6-7 AM
                 </label>
@@ -115,7 +125,7 @@ const Login = () => {
                     value={"7-8 AM"}
                     name="batch"
                     onChange={handleBatch}
-                    checked={batch.batch==="7-8 AM"}
+                    checked={batch.batch === "7-8 AM"}
                   />{" "}
                   7-8 AM
                 </label>
@@ -125,7 +135,7 @@ const Login = () => {
                     value={"8-9 AM"}
                     name="batch"
                     onChange={handleBatch}
-                    checked={batch.batch==="8-9 AM"}
+                    checked={batch.batch === "8-9 AM"}
                   />{" "}
                   8-9 AM
                 </label>
@@ -135,7 +145,7 @@ const Login = () => {
                     value={"5-6 PM"}
                     name="batch"
                     onChange={handleBatch}
-                    checked={batch.batch==="5-6 PM"}
+                    checked={batch.batch === "5-6 PM"}
                   />{" "}
                   5-6 PM
                 </label>
@@ -144,8 +154,12 @@ const Login = () => {
             </form>
           </div>
           <div className="buttondiv">
-            <button className="longbtn" onClick = {handlePayNow}>Pay Fee</button>
-            <button className="longbtn danger" onClick={handleDelete}>Delete Account</button>
+            <button className="longbtn" onClick={handlePayNow}>
+              Pay Fee
+            </button>
+            <button className="longbtn danger" onClick={handleDelete}>
+              Delete Account
+            </button>
           </div>
         </div>
       )}
