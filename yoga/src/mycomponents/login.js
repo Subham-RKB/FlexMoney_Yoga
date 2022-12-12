@@ -63,6 +63,9 @@ const Login = () => {
       }
     });
   };
+  const handlePayNow = (e)=>{
+    alert("Phone pay: 9894401705@ybl");
+  }
   return (
     <>
       {!isSubmit && (
@@ -70,7 +73,7 @@ const Login = () => {
           <div className="formContainer">
             <h1> Login</h1>
             <form onSubmit={handleSubmit}>
-              <label>Enter Your Email: </label>
+              <label>Enter Your Passkey: </label>
               <input
                 type="text"
                 id="email"
@@ -90,7 +93,7 @@ const Login = () => {
           <img src="./yogagreen.jpg" />
           <div>
             <h1>Hi, {userData.name} 👋 </h1>
-            <p>Joined on : {userData.joiningdate}</p>
+            <p>Joined on : {new Date(userData.joiningdate).toDateString()}</p>
           </div>
           <div>
             <h3>Batch : {userData.batch}</h3>
@@ -141,7 +144,7 @@ const Login = () => {
             </form>
           </div>
           <div className="buttondiv">
-            <button className="longbtn">Pay Fee</button>
+            <button className="longbtn" onClick = {handlePayNow}>Pay Fee</button>
             <button className="longbtn danger" onClick={handleDelete}>Delete Account</button>
           </div>
         </div>

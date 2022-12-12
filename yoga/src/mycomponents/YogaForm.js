@@ -13,7 +13,7 @@ const YogaForm = () => {
         email: "",
         age: "",
         joiningDate: "",
-        batch: "6-7 AM"
+        batch: ""
     });
     const [isSubmit, setIsSubmit] = useState(false);
     useEffect(() => {
@@ -27,20 +27,26 @@ const YogaForm = () => {
         console.log(name, value);
         setuserRegistration({ ...userRegistration, [name]: value });
     }
+    const makePayment =()=>{
+        alert("Pay Rs.500 for registration.\nPhone pay: 9894401705@ybl");
+        return true;
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
         const newRecord = { ...userRegistration, id: new Date().getDate().toString() };
         setFormErrors(validate(userRegistration));
         setIsSubmit(true);
         setRecord([...records, newRecord]);
-        if (Object.keys(formErrors).length === 0 && isSubmit) {
+        const paid = makePayment();
+        if (Object.keys(formErrors).length === 0 && paid) {
             axios({
                 method: 'post',
                 url: '/api/store',
                 data: newRecord
             }).then(function (response) {
                 console.log(response);
-                setuserRegistration({ username: "", email: "", age: "", joiningDate: "", batch: "6-7 AM" })
+                alert("Remember Your Pass Key for Login : "+(response.data.data));
+                setuserRegistration({ username: "", email: "", age: "", joiningDate: "", batch: "" })
                 setShow(true);
                 setTimeout(function(){
                     setShow(false);
@@ -78,7 +84,7 @@ const YogaForm = () => {
                 <img src="./yogagirl.jpg" className="image"/>
                 <div className="formContainer">
 
-                <h1 align="center">Subham's Yoga Center</h1>
+                <h1 align="center">Flex Yoga Center</h1>
                 <form action="" onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="name">Name: </label>
@@ -102,10 +108,10 @@ const YogaForm = () => {
                     <div>
                         <label htmlFor="batch">Batch: </label>
                         <div className="batches" name="batches">
-                            <label><input type="radio" value={"6-7 AM"} name="batch" onChange={handleInput} checked={true} /> 6-7 AM</label>
-                            <label><input type="radio" value={"7-8 AM"} name="batch" onChange={handleInput} /> 7-8 AM</label>
-                            <label><input type="radio" value={"8-9 AM"} name="batch" onChange={handleInput} /> 8-9 AM</label>
-                            <label><input type="radio" value={"5-6 PM"} name="batch" onChange={handleInput} /> 5-6 PM</label>
+                            <label><input type="radio" value={"6-7 AM"} name="batch" onChange={handleInput} checked={userRegistration.batch==="6-7 AM"} /> 6-7 AM</label>
+                            <label><input type="radio" value={"7-8 AM"} name="batch" onChange={handleInput} checked={userRegistration.batch==="7-8 AM"}/> 7-8 AM</label>
+                            <label><input type="radio" value={"8-9 AM"} name="batch" onChange={handleInput} checked={userRegistration.batch==="8-9 AM"}/> 8-9 AM</label>
+                            <label><input type="radio" value={"5-6 PM"} name="batch" onChange={handleInput} checked={userRegistration.batch==="5-6 PM"}/> 5-6 PM</label>
                         </div>
                     </div>
                     <span></span>

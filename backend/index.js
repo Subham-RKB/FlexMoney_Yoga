@@ -16,18 +16,19 @@ con.connect((err) => {
 });
 app.post("/api/store", (req, res) => {
   console.log("Stored");
+  var passKey =  req.body.email+Math.floor(1000 + Math.random() * 9000);
   var sql = `insert into users (name,email,age,joiningdate,batch) values (?,?,?,?,?);`;
   var age = parseInt(req.body.age);
   var join = new Date(req.body.joiningDate);
   con.query(
     sql,
-    [req.body.username, req.body.email, age, join, req.body.batch],
+    [req.body.username,passKey, age, join, req.body.batch],
     function (err, result) {
       if (err) throw err;
       console.log("inserted.");
     }
   );
-  res.send({ data: "ok" });
+  res.send({data:passKey});
 });
 app.post("/api/profile", (req, res) => {
   console.log(req.body);
@@ -47,7 +48,7 @@ app.put("/api/changeBatch", (req, res) => {
   });
 });
 app.delete("/api/delete", (req, res) => {
-  var sql = `delete from flexmoney.users where email=?`;
+  var sql = `delete from users where email=?`;
   con.query(sql, [req.body.email], function (err, result) {
     if (err) throw err;
     res.send({ data: "ok" });
